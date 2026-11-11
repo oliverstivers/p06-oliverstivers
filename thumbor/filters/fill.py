@@ -25,16 +25,13 @@ class Filter(BaseFilter):
     @filter_method(r"[\w]+", BaseFilter.Boolean)
     async def fill(self, color, fill_transparent=False):
         self.fill_engine = self.engine.__class__(self.context)
-        target_width = (
-            self.context.request.width
-            if self.context.request.width != 0
-            else self.engine.size[0]
+        canvas_width, canvas_height = getattr(
+            self.context.request,
+            "canvas_size",
+            (self.context.request.width, self.context.request.height),
         )
-        target_height = (
-            self.context.request.height
-            if self.context.request.height != 0
-            else self.engine.size[1]
-        )
+        target_width = canvas_width or self.engine.size[0]
+        target_height = canvas_height or self.engine.size[1]
 
         # if the color is 'auto'
         # we will calculate the median color of

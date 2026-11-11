@@ -27,6 +27,14 @@ class Filter(BaseFilter):
             8,
         ]:
             image_size = (image_size[1], image_size[0])
+
+        # keep the canvas size the client asked for, so fill can use it
+        if not hasattr(self.context.request, "canvas_size"):
+            self.context.request.canvas_size = (
+                self.context.request.width,
+                self.context.request.height,
+            )
+
         self.context.request.width = min(
             self.context.request.width, image_size[0]
         )
