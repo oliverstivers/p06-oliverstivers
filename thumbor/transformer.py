@@ -298,6 +298,9 @@ class Transformer:
             )
             crop_height = source_height
 
+        crop_width = max(1, crop_width)
+        crop_height = max(1, crop_height)
+
         crop_left = int(
             round(
                 min(
@@ -386,6 +389,9 @@ class Transformer:
         ):
             return
 
+        self.target_width = max(1, self.target_width)
+        self.target_height = max(1, self.target_height)
+
         # add 1e-5 to get .5 rounding up in Python3 as it was in Python2
         if (
             source_width / self.target_width * sign
@@ -414,6 +420,8 @@ class Transformer:
             if self.context.request.height == "orig"
             else self.context.request.height
         )
+        resize_width = max(1, resize_width)
+        resize_height = max(1, resize_height)
         self.context.request.width = int(max(requested_width, resize_width))
         self.context.request.height = int(max(requested_height, resize_height))
 
