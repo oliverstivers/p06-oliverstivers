@@ -278,6 +278,16 @@ class Engine(BaseEngine):
                 )
                 self.image = self.image.quantize(method=quantize_method)
 
+                # GIF has a single transparent index and no alpha channel.
+                # Record the index of the fully transparent palette entry.
+                if (
+                    requested_extension == ".gif"
+                    and self.image.palette.mode == "RGBA"
+                ):
+                    alphas = self.image.getpalette("RGBA")[3::4]
+                    if 0 in alphas:
+                        self.image.info["transparency"] = alphas.index(0)
+
         ext = requested_extension or self.get_default_extension()
 
         if ext in (".heic", ".heif") and not HAVE_HEIF:
